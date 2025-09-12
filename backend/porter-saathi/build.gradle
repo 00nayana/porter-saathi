@@ -18,6 +18,10 @@ repositories {
 	mavenCentral()
 }
 
+springBoot {
+	mainClass.set('com.porter.saathi.app.PorterSaathiApplication')
+}
+
 
 dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

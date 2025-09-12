@@ -14,7 +14,7 @@ RUN chmod +x gradlew
 RUN ./gradlew dependencies
 
 # Copy the rest of the source code
-COPY src src
+COPY src/ src/
 
 # Build the application
 RUN ./gradlew bootJar

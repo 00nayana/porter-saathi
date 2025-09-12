@@ -22,6 +22,10 @@ springBoot {
 	mainClass.set('com.porter.saathi.app.PorterSaathiApplication')
 }
 
+bootJar {
+	archiveFileName = "app.jar"
+}
+
 
 dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

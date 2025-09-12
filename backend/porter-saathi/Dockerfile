@@ -25,7 +25,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the built JAR from the build stage
-COPY --from=BUILD_STAGE /app/build/libs/*.jar app.jar
+COPY --from=BUILD_STAGE /app/build/libs/app.jar app.jar
 
 # Expose the port your application listens on (e.g., 8080 for Spring Boot)
 EXPOSE 8080

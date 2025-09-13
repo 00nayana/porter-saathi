@@ -5,6 +5,7 @@ import HomePageHeader from './components/HomePageHeader';
 import RegistrationForm from './components/RegistrationForm';
 import PenaltyQuery from './components/PenaltyQueryPage';
 import EarningsStatistics from './components/EarningsStatistics';
+import NavigateMeComponent from './components/NavigateMeComponent';
 
 const App = () => {
   const [isRegistered, setIsRegistered] = useState(false);
@@ -35,6 +36,8 @@ const App = () => {
               <Route path="/menu" element={<Menu />} />
               <Route path="/penalty" element={<PenaltyQueryPageWrapper />} />
               <Route path="/statistics" element={<EarningsStatisticsWrapper />} />
+              <Route path="/navigateme" element={<NavigateMeComponent />} />
+
             </>
           )}
         </Routes>
@@ -49,10 +52,13 @@ const Menu = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Button variant="contained" onClick={() => navigate('/penalty')}>
-        📦 Penalty Query
+        📦 Query Assistant
       </Button>
       <Button variant="contained" onClick={() => navigate('/statistics')}>
         📊 Earnings Statistics
+      </Button>
+      <Button variant="contained" onClick={() => navigate('/navigateme')}>
+        📊Help Navigate
       </Button>
     </Box>
   );

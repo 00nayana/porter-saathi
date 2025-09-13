@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM gradle:8.8 AS BUILD_STAGE
+FROM gradle:8.8-jdk21 AS BUILD_STAGE
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the built JAR from the build stage
-COPY --from=BUILD_STAGE /app/build/libs/app.jar app.jar
+COPY --from=BUILD_STAGE /app/build/libs/*-SNAPSHOT.jar app.jar
 
 # Expose the port your application listens on (e.g., 8080 for Spring Boot)
 EXPOSE 8080

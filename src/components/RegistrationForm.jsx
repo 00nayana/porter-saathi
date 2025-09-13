@@ -11,6 +11,7 @@ const RegistrationForm = (props) => {
     aadhaarFile: null,
   });
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const audioRef = useRef(null);
 
@@ -35,12 +36,40 @@ const RegistrationForm = (props) => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.name || !formData.dlNumber || !formData.phone || !formData.aadhaarFile) {
-      const errorMsg = 'All fields including Aadhaar must be filled!';
-      await sendErrorToBackend(errorMsg);
+    const { name, dlNumber, phone, aadhaarFile } = formData;
+
+    if (!name || !dlNumber || !phone || !aadhaarFile) {
+      const msg = 'All fields including Aadhaar must be filled!';
+      setErrorMessage(msg);
+      await sendErrorToBackend(msg);
       return;
     }
 
+    const dlRegex = /^\d{10}$/;
+    if (!dlRegex.test(dlNumber)) {
+      const msg = 'DL Number must be exactly 10 digits.';
+      setErrorMessage(msg);
+      await sendErrorToBackend(msg);
+      return;
+    }
+
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(phone)) {
+      const msg = 'Phone number must be exactly 10 digits.';
+      setErrorMessage(msg);
+      await sendErrorToBackend(msg);
+      return;
+    }
+
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg'];
+    if (!allowedTypes.includes(aadhaarFile.type)) {
+      const msg = 'Aadhaar file must be in PDF, JPG, or JPEG format.';
+      setErrorMessage(msg);
+      await sendErrorToBackend(msg);
+      return;
+    }
+
+    setErrorMessage('');
     setLoading(true);
 
     setTimeout(() => {
@@ -102,8 +131,8 @@ const RegistrationForm = (props) => {
         margin="normal"
       >
         <MenuItem value="english">English</MenuItem>
-        <MenuItem value="hindi">Hindi</MenuItem>
-        <MenuItem value="kannada">Kannada</MenuItem>
+        <MenuItem value="hindi">हिन्दी</MenuItem>
+        <MenuItem value="kannada">ಕನ್ನಡ</MenuItem>
       </TextField>
 
       <Button
@@ -112,10 +141,14 @@ const RegistrationForm = (props) => {
         sx={{ mt: 2 }}
       >
         Upload Aadhaar
-        <input type="file" name="aadhaarFile" accept=".pdf,.jpg,.png" hidden onChange={handleChange} />
+        <input type="file" name="aadhaarFile" accept=".pdf,.jpg,.jpeg" hidden onChange={handleChange} />
       </Button>
       {formData.aadhaarFile && (
         <Typography variant="body2" mt={1}>{formData.aadhaarFile.name}</Typography>
+      )}
+
+      {errorMessage && (
+        <Typography color="error" mt={2} textAlign="center">{errorMessage}</Typography>
       )}
 
       <Box mt={3} textAlign="center">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
 } from '@mui/material';
 import {
   LineChart,
@@ -31,8 +32,11 @@ const filterToApiKey = {
 
 const EarningsStatistics = () => {
   const [filter, setFilter] = useState('today');
+  const [language, setLanguage] = useState('english');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const audioRef = useRef(null);
 
   const fetchStatistics = async (selectedFilter) => {
     setLoading(true);
@@ -44,7 +48,6 @@ const EarningsStatistics = () => {
       const apiKey = filterToApiKey[selectedFilter];
       const apiData = response.data[apiKey] || [];
 
-      // Map API data to expected chart format
       const formattedData = apiData.map((entry) => ({
         period: entry.timeframe,
         earnings: entry.earnings,
@@ -59,6 +62,27 @@ const EarningsStatistics = () => {
     }
   };
 
+  const explainStatistics = async () => {
+    setAudioLoading(true);
+    try {
+      const response = await axios.get(
+        `https://b45247fb6e2e.ngrok-free.app/api/driver/earnings/D123/summary?language=${language}`,
+        { responseType: 'blob' }
+      );
+
+      if (response.data && audioRef.current) {
+        const audioBlobUrl = URL.createObjectURL(response.data);
+        audioRef.current.src = audioBlobUrl;
+        audioRef.current.load();
+        await audioRef.current.play();
+      }
+    } catch (error) {
+      console.error('Failed to fetch explanation audio:', error);
+    } finally {
+      setAudioLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchStatistics(filter);
   }, [filter]);
@@ -66,7 +90,7 @@ const EarningsStatistics = () => {
   return (
     <Box
       sx={{
-        maxWidth: 400,
+        maxWidth: 500,
         margin: '2rem auto',
         padding: '1.5rem',
         borderRadius: 3,
@@ -78,7 +102,7 @@ const EarningsStatistics = () => {
         Earnings Statistics
       </Typography>
 
-      <FormControl fullWidth sx={{ mb: 3 }}>
+      <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel id="filter-label">Select Time Range</InputLabel>
         <Select
           labelId="filter-label"
@@ -94,6 +118,30 @@ const EarningsStatistics = () => {
           <MenuItem value="last_month">Last Month</MenuItem>
         </Select>
       </FormControl>
+
+      <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel id="language-label">Select Language</InputLabel>
+        <Select
+          labelId="language-label"
+          value={language}
+          label="Select Language"
+          onChange={(e) => setLanguage(e.target.value)}
+        >
+          <MenuItem value="english">English</MenuItem>
+          <MenuItem value="hindi">हिन्दी</MenuItem>
+          <MenuItem value="kannada">ಕನ್ನಡ</MenuItem>
+        </Select>
+      </FormControl>
+
+      <Button
+        variant="contained"
+        fullWidth
+        sx={{ mb: 3 }}
+        onClick={explainStatistics}
+        disabled={audioLoading}
+      >
+        {audioLoading ? <CircularProgress size={24} /> : 'Explain Statistics'}
+      </Button>
 
       <Paper
         elevation={3}
@@ -128,6 +176,8 @@ const EarningsStatistics = () => {
           </ResponsiveContainer>
         )}
       </Paper>
+
+      <audio ref={audioRef} hidden />
     </Box>
   );
 };

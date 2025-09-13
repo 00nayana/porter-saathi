@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Typography, Select, MenuItem, CircularProgress, Box, Card, CardContent, FormControl, InputLabel } from '@mui/material';
+import { Button, Typography, Select, MenuItem, CircularProgress, Box, Card, FormControl, InputLabel } from '@mui/material';
 
 function PenaltyQueryPage() {
   const [formData, setFormData] = useState({
@@ -117,8 +117,8 @@ function PenaltyQueryPage() {
             label="Language"
           >
             <MenuItem value="en">English</MenuItem>
-            <MenuItem value="hi">Hindi</MenuItem>
-            <MenuItem value="kn">Kannada</MenuItem>
+            <MenuItem value="hi">हिन्दी</MenuItem>
+            <MenuItem value="kn">ಕನ್ನಡ</MenuItem>
           </Select>
         </FormControl>
 

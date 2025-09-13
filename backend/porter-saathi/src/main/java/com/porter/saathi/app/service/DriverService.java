@@ -13,6 +13,8 @@ public interface DriverService {
 
     Earnings getTodaysEarnings(String driverId);
 
+    Earnings getYesterdaysEarnings(String driverId);
+
     Penalty getLatestPenalty(String driverId);
 
     List<Reward> getRewards(String driverId);

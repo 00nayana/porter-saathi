@@ -28,6 +28,9 @@ public class DriverServiceImpl implements DriverService {
         Earnings e1 = new Earnings("D123", LocalDate.now(), 1500, 100, 50, 1350);
         earnings.put(d1.getDriverId(), List.of(e1));
 
+        Earnings e2 = new Earnings("D123", LocalDate.now().minusDays(1), 1200, 80, 40, 1080);
+        earnings.put(d1.getDriverId(), List.of(e1));
+
         // Mock Penalty
         Penalty p1 = new Penalty("P789", "D123", LocalDate.now().minusDays(1),
                 "Delivery was late by 30 minutes", 50);
@@ -47,6 +50,11 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Earnings getTodaysEarnings(String driverId) {
         return earnings.get(driverId).get(0);
+    }
+
+    @Override
+    public Earnings getYesterdaysEarnings(String driverId) {
+        return earnings.get(driverId).get(1);
     }
 
     @Override

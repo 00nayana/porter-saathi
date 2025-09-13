@@ -34,7 +34,7 @@ public class GPTClient {
                         .put("content", "You are Porter Saathi, a voice assistant for drivers. Use the provided driver data for accurate answers. Reply in short, simple " + instruction + "."))
                 .put(new JSONObject()
                         .put("role", "system")
-                        .put("content", "Driver data: " + context))
+                        .put("content", "Data: " + context))
                 .put(new JSONObject()
                         .put("role", "user")
                         .put("content", userQuery));

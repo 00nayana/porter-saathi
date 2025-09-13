@@ -27,6 +27,11 @@ public class DriverController {
         return driverService.getTodaysEarnings(driverId);
     }
 
+    @GetMapping("/{driverId}/earnings/yesterday")
+    public Earnings getYesterdaysEarnings(@PathVariable String driverId) {
+        return driverService.getYesterdaysEarnings(driverId);
+    }
+
     @GetMapping("/{driverId}/penalties/latest")
     public Penalty getLatestPenalty(@PathVariable String driverId) {
         return driverService.getLatestPenalty(driverId);

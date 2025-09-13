@@ -16,8 +16,6 @@ public class GoogleTranslateClient {
     public String translateText(String text, String sourceLang, String targetLang) throws Exception {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-
-
         // Build JSON body safely
         JSONObject bodyJson = new JSONObject()
                 .put("q", text)

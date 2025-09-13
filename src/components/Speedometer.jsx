@@ -1,66 +1,74 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import GaugeChart from 'react-gauge-chart';
 import axios from 'axios';
 
 const Speedometer = () => {
   const [speed, setSpeed] = useState(0);
+  const [alertTriggered, setAlertTriggered] = useState(false);
   const audioRef = useRef(null);
-  const [audioUrl, setAudioUrl] = useState('');
 
-  const fetchSlowDownAudio = async () => {
+  const fetchAndPlayAlert = async () => {
     try {
-    const apiurl = `https://b45247fb6e2e.ngrok-free.app/assistant/form-error?message=${encodeURIComponent('Please drive slowly')}&lang=hindi`;
+        const apiurl = `https://b45247fb6e2e.ngrok-free.app/assistant/form-error?message=${encodeURIComponent('Please drive slowly')}&lang=hindi`;
 
-      const response = await axios.post(apiurl, null, { responseType: 'blob' });
+        const response = await axios.post(apiurl, null, { responseType: 'blob' });
 
       const audioBlob = new Blob([response.data], { type: 'audio/mp3' });
-      const url = URL.createObjectURL(audioBlob);
-      setAudioUrl(url);
+      const audioUrl = URL.createObjectURL(audioBlob);
 
       if (audioRef.current) {
-        audioRef.current.play();
+        audioRef.current.src = audioUrl;
+        audioRef.current.play().catch((err) => {
+          console.error('Audio playback failed:', err);
+        });
       }
     } catch (error) {
-      console.error('Failed to fetch audio:', error);
+      console.error('Failed to fetch alert audio:', error);
     }
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const randomSpeed = Math.floor(Math.random() * 120); // Random speed 0-120 km/h
-      setSpeed(randomSpeed);
+      const newSpeed = Math.floor(Math.random() * 120); // Random speed from 0 to 119
+      setSpeed(newSpeed);
 
-      if (randomSpeed > 80) {
-        fetchSlowDownAudio();
+      if (newSpeed > 80 && !alertTriggered) {
+        setAlertTriggered(true);
+        fetchAndPlayAlert();
+      } else if (newSpeed <= 80 && alertTriggered) {
+        // Reset when speed drops below threshold
+        setAlertTriggered(false);
       }
-    }, 3000); // Update every 3 seconds
+    }, 2000); // Update speed every 2 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [alertTriggered]);
 
   return (
-    <Box sx={{ textAlign: 'center', padding: '2rem' }}>
-      <Typography variant="h4" gutterBottom>
+    <Box
+      sx={{
+        maxWidth: 500,
+        margin: '2rem auto',
+        padding: '1.5rem',
+        textAlign: 'center',
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
         Speedometer
       </Typography>
-      <Box
-        sx={{
-          width: '200px',
-          height: '200px',
-          borderRadius: '50%',
-          border: '10px solid #1976d2',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '2rem',
-          margin: '0 auto',
-          position: 'relative',
-        }}
-      >
-        {speed} km/h
-      </Box>
 
-      <audio ref={audioRef} src={audioUrl} controls style={{ marginTop: '1rem' }} />
+      <GaugeChart
+        id="speedometer-gauge"
+        nrOfLevels={30}
+        colors={['#00FF00', '#FFEA00', '#FF0000']}
+        arcWidth={0.3}
+        percent={speed / 120}
+        textColor="#000"
+        formatTextValue={() => `${speed} km/h`}
+      />
+
+      <audio ref={audioRef} hidden />
     </Box>
   );
 };

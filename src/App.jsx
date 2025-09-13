@@ -6,6 +6,7 @@ import RegistrationForm from './components/RegistrationForm';
 import PenaltyQuery from './components/PenaltyQueryPage';
 import EarningsStatistics from './components/EarningsStatistics';
 import NavigateMeComponent from './components/NavigateMeComponent';
+import ConversationHelp from './components/ConversationHelp';
 
 const App = () => {
   const [isRegistered, setIsRegistered] = useState(false);
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="/penalty" element={<PenaltyQueryPageWrapper />} />
               <Route path="/statistics" element={<EarningsStatisticsWrapper />} />
               <Route path="/navigateme" element={<NavigateMeComponent />} />
+              <Route path="/conversationhelp" element={<ConversationHelp />} />
 
             </>
           )}
@@ -59,6 +61,9 @@ const Menu = () => {
       </Button>
       <Button variant="contained" onClick={() => navigate('/navigateme')}>
         📊Help Navigate
+      </Button>
+      <Button variant="contained" onClick={() => navigate('/conversationhelp')}>
+        Help me Converse
       </Button>
     </Box>
   );

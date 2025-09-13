@@ -14,6 +14,11 @@ public class GoogleTranslateClient {
     private static final OkHttpClient client = new OkHttpClient();
 
     public String translateText(String text, String sourceLang, String targetLang) throws Exception {
+
+        if(sourceLang.equals(targetLang)) {
+            return text;
+        }
+
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
         // Build JSON body safely

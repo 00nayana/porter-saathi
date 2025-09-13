@@ -3,32 +3,29 @@ FROM gradle:8.8-jdk21 AS BUILD_STAGE
 
 WORKDIR /app
 
-# Copy only the build-related files first to leverage Docker layer caching
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle/ gradle/
-
-# Make gradlew executable
 RUN chmod +x gradlew
 
-# Download dependencies (this layer will be cached if dependencies don't change)
-RUN ./gradlew dependencies
-
-# Copy the rest of the source code
+# Copy source code
 COPY src/ src/
 
-# Build the application
-RUN ./gradlew clean bootJar
+# Build the Spring Boot fat jar (skip tests for faster and more predictable build)
+RUN ./gradlew clean bootJar -x test
 
-# Stage 2: Create the final image
+# Verify jar contains main class (optional debug for Render logs)
+# RUN jar tf build/libs/app.jar | grep PorterSaathiApplication
+
+# Stage 2: Runtime
 FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-# Copy the built JAR from the build stage
+# Copy the built fat jar explicitly
 COPY --from=BUILD_STAGE /app/build/libs/app.jar app.jar
 
-# Expose the port your application listens on (e.g., 8080 for Spring Boot)
+# Expose the default Spring Boot port
 EXPOSE 8080
 
-# Define the entrypoint to run the application
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

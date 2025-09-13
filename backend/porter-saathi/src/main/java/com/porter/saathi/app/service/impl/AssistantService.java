@@ -16,9 +16,14 @@ public class AssistantService {
     @Autowired
     private DriverService driverService;
 
-    private final WhisperClient whisperClient = new WhisperClient();
-    private final GPTClient gptClient = new GPTClient();
-    private final GoogleTTSClient ttsClient = new GoogleTTSClient();
+    @Autowired
+    private WhisperClient whisperClient;
+
+    @Autowired
+    private GPTClient gptClient;
+
+    @Autowired
+    private GoogleTTSClient ttsClient;
 
     public byte[] processQuery(MultipartFile audioFile, String driverId, String languageOverride) throws Exception {
 

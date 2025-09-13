@@ -35,6 +35,9 @@ dependencies {
 	implementation 'com.jayway.jsonpath:json-path:2.9.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation(platform("com.squareup.okhttp3:okhttp-bom:5.1.0"))
+	implementation 'org.json:json:20250517'
+	implementation("com.squareup.okhttp3:okhttp")
 
 }
 

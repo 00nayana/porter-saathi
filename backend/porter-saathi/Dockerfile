@@ -17,7 +17,7 @@ RUN ./gradlew dependencies
 COPY src/ src/
 
 # Build the application
-RUN ./gradlew bootJar
+RUN ./gradlew clean bootJar
 
 # Stage 2: Create the final image
 FROM openjdk:21-jdk-slim

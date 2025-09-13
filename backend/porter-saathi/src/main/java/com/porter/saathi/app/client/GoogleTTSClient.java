@@ -24,8 +24,8 @@ public class GoogleTTSClient {
 
         String languageCode = switch (language) {
             case "hindi" -> "hi-IN";
-            case "kannada" -> "kn-IN";
-            default -> "en-US";
+            case "english" -> "en-US";
+            default -> "kn-IN";
         };
 
         String body = new JSONObject()

@@ -6,15 +6,13 @@ import com.porter.saathi.app.models.Penalty;
 import com.porter.saathi.app.models.Reward;
 import com.porter.saathi.app.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/driver")
+@CrossOrigin(origins = {"*"})
 public class DriverController {
     @Autowired
     private DriverService driverService;

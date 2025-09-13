@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/assistant")
+@CrossOrigin(origins = {"*"})
 public class VoiceAssistantController {
 
     @Autowired
@@ -31,7 +32,7 @@ public class VoiceAssistantController {
     @PostMapping("/form-error")
     public ResponseEntity<byte[]> formErrorToSpeech(@RequestParam("message") String errorMessage,
                                                     @RequestParam(value = "lang", required = false) String language) throws Exception {
-        byte[] mp3Reply = assistantService.toSpeech(errorMessage, language);
+        byte[] mp3Reply = assistantService.translateAndConvertToSpeech(errorMessage, language);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=form-error.mp3")

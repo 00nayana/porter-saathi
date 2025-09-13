@@ -1,6 +1,7 @@
 package com.porter.saathi.app.service.impl;
 import com.porter.saathi.app.client.GPTClient;
 import com.porter.saathi.app.client.GoogleTTSClient;
+import com.porter.saathi.app.client.GoogleTranslateClient;
 import com.porter.saathi.app.client.WhisperClient;
 import com.porter.saathi.app.models.*;
 import com.porter.saathi.app.service.DriverService;
@@ -24,6 +25,9 @@ public class AssistantService {
 
     @Autowired
     private GoogleTTSClient ttsClient;
+
+    @Autowired
+    private GoogleTranslateClient googleTranslateClient;
 
     public byte[] processQuery(MultipartFile audioFile, String driverId, String languageOverride) throws Exception {
 
@@ -62,6 +66,11 @@ public class AssistantService {
 
         // Step 3: GPT reply → TTS audio
         return toSpeech(aiReply, finalLang);
+    }
+
+    public byte[] translateAndConvertToSpeech(String text, String language) throws Exception {
+        String translatedText = googleTranslateClient.translateText(text, "english", language);
+        return toSpeech(translatedText, language);
     }
 
     public byte[] toSpeech(String errorMessage, String language) throws Exception {

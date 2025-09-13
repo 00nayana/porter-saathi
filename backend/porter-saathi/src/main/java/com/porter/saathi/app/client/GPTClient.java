@@ -24,8 +24,8 @@ public class GPTClient {
 
         String instruction = switch (lang) {
             case "hindi" -> "Reply in Hindi";
-            case "kannada" -> "Reply in Kannada";
-            default -> "Reply in English";
+            case "english" -> "Reply in English";
+            default -> "Reply in Kannada";
         };
 
         JSONArray messages = new JSONArray()

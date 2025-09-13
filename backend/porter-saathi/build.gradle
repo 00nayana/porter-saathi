@@ -18,10 +18,6 @@ repositories {
 	mavenCentral()
 }
 
-springBoot {
-	mainClass.set('com.porter.saathi.app.PorterSaathiApplication')
-}
-
 bootJar {
 	archiveFileName = "app.jar"
 }

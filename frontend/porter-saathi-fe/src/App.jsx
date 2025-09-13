@@ -1,65 +1,86 @@
-import React, { useState } from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
-import EarningsStatistics from './components/EarningsStatistics';
-import PenaltyQuery from './components/PenaltyQueryPage';
-import RegistrationForm from './components/RegistrationForm';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Container, Box, Button } from '@mui/material';
 import HomePageHeader from './components/HomePageHeader';
+import RegistrationForm from './components/RegistrationForm';
+import PenaltyQuery from './components/PenaltyQueryPage';
+import EarningsStatistics from './components/EarningsStatistics';
 
 const App = () => {
   const [isRegistered, setIsRegistered] = useState(false);
-  const [currentPage, setCurrentPage] = useState('home');
+
+  useEffect(() => {
+    const stored = localStorage.getItem('isRegistered');
+    if (stored === 'true') setIsRegistered(true);
+  }, []);
 
   const handleRegistrationSuccess = () => {
+    localStorage.setItem('isRegistered', 'true');
     setIsRegistered(true);
-    setCurrentPage('menu');
   };
 
   return (
-    <Container maxWidth="sm" sx={{ padding: 2 }}>
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <HomePageHeader />
-      </Box>
+    <Router>
+      <Container maxWidth="sm" sx={{ padding: 2 }}>
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <HomePageHeader />
+        </Box>
 
-      {!isRegistered ? (
-        <RegistrationForm onSuccess={handleRegistrationSuccess} />
-      ) : (
-        <>
-          {currentPage === 'menu' && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Registration Successful! 🎉
-                <br />
-                You can now access the following options:
-              </Typography>
-              <Button variant="contained" onClick={() => setCurrentPage('penalty')}>
-                📦 Penalty Query
-              </Button>
-              <Button variant="contained" onClick={() => setCurrentPage('statistics')}>
-                📊 Earnings Statistics
-              </Button>
-            </Box>
+        <Routes>
+          {!isRegistered ? (
+            <Route path="*" element={<RegistrationForm onSuccess={handleRegistrationSuccess} />} />
+          ) : (
+            <>
+              <Route path="/" element={<Navigate to="/menu" />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/penalty" element={<PenaltyQueryPageWrapper />} />
+              <Route path="/statistics" element={<EarningsStatisticsWrapper />} />
+            </>
           )}
+        </Routes>
+      </Container>
+    </Router>
+  );
+};
 
-          {currentPage === 'penalty' && (
-            <Box>
-              <Button variant="outlined" sx={{ mb: 2 }} onClick={() => setCurrentPage('menu')}>
-                ← Back
-              </Button>
-              <PenaltyQuery onBack={() => setCurrentPage('menu')} />
-            </Box>
-          )}
+const Menu = () => {
+  const navigate = useNavigate();
 
-          {currentPage === 'statistics' && (
-            <Box>
-              <Button variant="outlined" sx={{ mb: 2 }} onClick={() => setCurrentPage('menu')}>
-                ← Back
-              </Button>
-              <EarningsStatistics />
-            </Box>
-          )}
-        </>
-      )}
-    </Container>
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Button variant="contained" onClick={() => navigate('/penalty')}>
+        📦 Penalty Query
+      </Button>
+      <Button variant="contained" onClick={() => navigate('/statistics')}>
+        📊 Earnings Statistics
+      </Button>
+    </Box>
+  );
+};
+
+const PenaltyQueryPageWrapper = () => {
+  const navigate = useNavigate();
+
+  return (
+    <Box>
+      <Button variant="outlined" sx={{ mb: 2 }} onClick={() => navigate(-1)}>
+        ← Back
+      </Button>
+      <PenaltyQuery />
+    </Box>
+  );
+};
+
+const EarningsStatisticsWrapper = () => {
+  const navigate = useNavigate();
+
+  return (
+    <Box>
+      <Button variant="outlined" sx={{ mb: 2 }} onClick={() => navigate(-1)}>
+        ← Back
+      </Button>
+      <EarningsStatistics />
+    </Box>
   );
 };
 

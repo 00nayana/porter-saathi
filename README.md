@@ -1,6 +1,6 @@
 ## **Porter Saathi**
 
-Porter Saathi is a voice-first, vernacular-driven AI assistant integrated within the Porter app. Designed as a "Saathi" (Partner), it serves as the primary interface for drivers, translating complex, text-based information into simple, actionable voice and visual conversations.
+Porter Saathi is a voice-first, vernacular-driven AI assistant. Designed as a "Saathi" (Partner), it serves as the primary interface for drivers, translating complex, text-based information into simple, actionable voice and visual conversations.
 
 ### **Features**
 
